@@ -119,4 +119,5 @@ h1{
   width: 140px;
   border-radius: 10%;
   box-shadow: 10px 10px 5px gray;
+  pointer-events: none;
 }

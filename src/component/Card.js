@@ -5,52 +5,33 @@ let selectedCard2 = 0;
 let value1 = 0;
 let value2 = 0;
 let matchedPairs = 0;
-const cardBackgroundColor = "#448AFF";
-
-export const gameStart = (currentLevel) => {
-    selectedCard1 = 0;
-    selectedCard2 = 0;
-    value1 = 0;
-    value2 = 0;
-    matchedPairs = 0;
-    for(let i=1; i<=currentLevel; i++){
-        document.getElementById(i).style.backgroundColor = cardBackgroundColor;
-        document.getElementById(i).style.color = cardBackgroundColor;
-        document.getElementById(i).style.pointerEvents = "auto";
-    }
-    document.getElementById("hint").style.pointerEvents = "auto";
-}
-
-export const handleGiveUp = (currentLevel) => {
-    for(let i=1; i<=currentLevel; i++){
-        document.getElementById(i).style.backgroundColor = "#ffffff";
-        document.getElementById(i).style.color = "rgb(0, 0, 0)";
-        document.getElementById(i).style.pointerEvents = "none";
-    }
-    document.getElementById("hint").style.pointerEvents = "auto";
-}
-
-export const handleHint = (currentLevel) => {
-    let randomNumber = Math.ceil(Math.random()*currentLevel);
-    console.log("random number: " + randomNumber);
-    let color = document.getElementById(randomNumber).style.backgroundColor;
-    console.log("color: " + color)
-    if( color === "rgb(68, 138, 255)"){
-        document.getElementById(randomNumber).style.backgroundColor = "#ffffff";
-        document.getElementById(randomNumber).style.color = "rgb(0, 0, 0)"
-        setTimeout(() => {
-            document.getElementById(randomNumber).style.backgroundColor = cardBackgroundColor;
-            document.getElementById(randomNumber).style.color = cardBackgroundColor;
-        }, 500);
-        document.getElementById("hint").style.pointerEvents = "none";
-    }
-    else {
-        handleHint(currentLevel);
-    }
-}
 
 const Card = (props) => { 
     let currentLevel = props.currentLevel;
+    let cardDeck = [...props.cardDeck]
+    let flipped = props.flipped;
+    let id = props.id;
+    let value = props.value;
+
+    console.log("Log inside cards");
+    console.log(cardDeck);
+
+    console.log("flipped: " + flipped);
+
+    const gameStart = (currentLevel) => {
+        selectedCard1 = 0;
+        selectedCard2 = 0;
+        value1 = 0;
+        value2 = 0;
+        matchedPairs = 0;
+        for(let i=0; i<currentLevel; i++){
+            cardDeck[i].flipped = false;
+        }
+        props.updateCardDeck(cardDeck);
+        console.log("Game Start");
+        console.log(cardDeck);
+    }
+
     const gameCompleted = () => {
         if(matchedPairs === currentLevel/2){
             props.setStar(currentLevel);
@@ -62,6 +43,7 @@ const Card = (props) => {
             value2 = 0;
             matchedPairs = 0;
             props.resetMoves();
+            props.updateCardDeck(cardDeck);
         }
     }
     
@@ -73,17 +55,17 @@ const Card = (props) => {
             value2 = 0;
             matchedPairs++;
             props.incrementMoves();
+            props.updateCardDeck(cardDeck);
             gameCompleted();
         } 
         
         else if (selectedCard1 && selectedCard2) {
             setTimeout(() => {
-                document.getElementById(selectedCard1).style.backgroundColor = cardBackgroundColor;
-                document.getElementById(selectedCard2).style.backgroundColor = cardBackgroundColor;
-                document.getElementById(selectedCard1).style.color = cardBackgroundColor;
-                document.getElementById(selectedCard2).style.color = cardBackgroundColor;
-                document.getElementById(selectedCard1).style.pointerEvents = "auto";
-                document.getElementById(selectedCard2).style.pointerEvents = "auto";
+                cardDeck[selectedCard1-1].flipped = false;
+                cardDeck[selectedCard2-1].flipped = false;
+                props.updateCardDeck(cardDeck);
+                console.log("compare cards");
+                console.log(cardDeck);
                 selectedCard1 = 0;
                 value1 = 0;
                 selectedCard2 = 0;
@@ -93,30 +75,30 @@ const Card = (props) => {
         }
     }
         const handleCardClick = (id) => {
-            document.getElementById(id).style.backgroundColor = "#ffffff";
-            document.getElementById(id).style.color = "rgb(0, 0, 0)";
-            document.getElementById(id).style.pointerEvents = "none";
-            document.getElementById(id).style.transition = "background-color 0.25s ease-out";
+            cardDeck[id-1].flipped = true;
+            props.updateCardDeck(cardDeck);
+            console.log("Inside handle card click");
+            console.log(cardDeck)
             if(selectedCard1 === 0){
-                selectedCard1 = props.id;
-                value1 = props.value;
+                selectedCard1 = id;
+                value1 = value;
             } else {
-                selectedCard2 = props.id
-                value2 = props.value;
+                selectedCard2 = id
+                value2 = value;
             }
 
             compareCards();
         }
-    
 
+        
         return (
             <div 
-                className="card"
-                 onClick={() => handleCardClick(props.id)}
-                 id={props.id}
+                className={flipped ? "flipped" : "card"}
+                 onClick={() => handleCardClick(id)}
+                 id={id}
                  >
                 <p className="card-number">
-                    {props.value}
+                    {value}
                 </p>
             </div>
         )
