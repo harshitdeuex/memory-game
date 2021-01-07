@@ -5,8 +5,6 @@ let selectedCard2 = 0;
 let value1 = 0;
 let value2 = 0;
 let matchedPairs = 0;
-let cardWidth = "220px";
-let cardHeight = "250px";
 const cardBackgroundColor = "#448AFF";
 
 export const gameStart = (currentLevel) => {
@@ -51,20 +49,8 @@ export const handleHint = (currentLevel) => {
     }
 }
 
-const cardDimension = (currentLevel) => {
-    if(currentLevel === 14){
-        cardWidth = "165px";
-        cardHeight = "200px";
-    } else {
-        cardWidth = "220px";
-        cardHeight = "250px";
-    }
-}
 const Card = (props) => { 
     let currentLevel = props.currentLevel;
-    cardDimension(currentLevel);
-   
-   
     const gameCompleted = () => {
         if(matchedPairs === currentLevel/2){
             props.setStar(currentLevel);
@@ -110,7 +96,7 @@ const Card = (props) => {
             document.getElementById(id).style.backgroundColor = "#ffffff";
             document.getElementById(id).style.color = "rgb(0, 0, 0)";
             document.getElementById(id).style.pointerEvents = "none";
-            document.getElementById(id).style.transition = "background-color 0.5s ease-out";
+            document.getElementById(id).style.transition = "background-color 0.25s ease-out";
             if(selectedCard1 === 0){
                 selectedCard1 = props.id;
                 value1 = props.value;
@@ -125,15 +111,9 @@ const Card = (props) => {
 
         return (
             <div 
-                className="card" 
+                className="card"
                  onClick={() => handleCardClick(props.id)}
                  id={props.id}
-                 style={{
-                     backgroundColor: cardBackgroundColor, 
-                     color: cardBackgroundColor,
-                     width: cardWidth,
-                     height: cardHeight,
-                    }}
                  >
                 <p className="card-number">
                     {props.value}

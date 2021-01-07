@@ -19,7 +19,10 @@ h1{
   color:  #448AFF;
   margin: 10px;
   border-radius: 10%;
+  height: 185px;
+  width: 140px;
   box-shadow: 10px 10px 5px gray;
+  pointer-events: all;
 }
 
 .card:hover {
@@ -27,7 +30,7 @@ h1{
 }
 
 .card-number{
-  font-size: 70px;
+  font-size: 50px;
   text-align: center;
   justify-content: center;
   align-items: center;
@@ -112,6 +115,8 @@ h1{
   pointer-events: "none";
   transition: background-color 0.5s ease-out;
   margin: 10px;
+  height: 185px;
+  width: 140px;
   border-radius: 10%;
   box-shadow: 10px 10px 5px gray;
 }

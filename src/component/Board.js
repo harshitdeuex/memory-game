@@ -71,6 +71,8 @@ const Board = () => {
         setTotalStars(stars);
         /* displayChallengeButton(); */
     }
+
+
     const incrementMoves = () => {
         setMoves(moves + 1);
     }
@@ -82,8 +84,8 @@ const Board = () => {
     const handleRestartLevel = (currentLevel) => {
         alert("restarting level");
         setMoves(0);
-        setCardDeck(card);
         createBoard();
+        setCardDeck(card);
         gameStart(currentLevel);
         stars[currentLevel/4] = 0;
         setTotalStars(stars);
@@ -97,16 +99,14 @@ const Board = () => {
         stars = copyOfStars;
         setTotalStars(stars);
         setMoves(0);
-        setCardDeck(card);
         createBoard();
+        setCardDeck(card);
         gameStart(currentLevel);
         /* displayChallengeButton(); */
     }
 
     const handleLevelClicked = (level) => {
         setMoves(0);
-        setCardDeck(card);
-        createBoard();
         gameStart(currentLevel);
         currentLevel = level;
         createBoard();
@@ -115,21 +115,25 @@ const Board = () => {
     }
 
     const handleOpenCard = (id) => {
-        cardDeck.forEach((item) => {
+        card.forEach((item) => {
             if(id === item.id){
                 item.flipped = true;
             }
-            console.log(item);
         })
+        setCardDeck(card);
+        console.log(cardDeck);
     }
 
     const handleCloseCard = (id) => {
-        for(let item in card){
+        card.forEach((item) => {
             if(id === item.id){
                 item.flipped = false;
             }
-            console.log(item);
-        }
+            
+            setCardDeck(card);
+            console.log("cardClosed");
+            console.log(cardDeck);
+        })
     }
 
     return (
