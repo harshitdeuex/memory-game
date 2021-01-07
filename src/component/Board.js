@@ -1,74 +1,64 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import Card from './Card'
 import {gameStart, handleGiveUp, handleHint} from './Card';
 
-let array = [];
-let arrayObject = [];
-let currentLevel = 6;
+/* let array = []; */
+let cardValue = [];
+
+/* let arrayObject = []; */
+let card = [];
+
+let currentLevel = 4;
 let currentStar = 0;
-let level1star = 0, level2star = 0,level3star = 0,level4star = 0,level5star = 0; 
+let stars = {"1": 0, "2": 0,"3": 0,"4": 0,"5": 0}
+let copyOfStars = {"1": 0, "2": 0,"3": 0,"4": 0,"5": 0};
+/* let level1star = 0, level2star = 0,level3star = 0,level4star = 0,level5star = 0; */ 
 let totalStars = 0;
 
-const createArray = () => {
-    array = [];
+/* createArray */
+const createCardValues = () => {
+    cardValue = [];
     for(let i=1; i<=currentLevel; i++){
-        array.push(i);
+        cardValue.push(Math.ceil(i/2));
     }
 }
 
-const createArrayObject = () => {
-    arrayObject = [];
+/* createArrayObject */
+const createCard = () => {
+    card = [];
     for(let i=1; i<=currentLevel; i++){
-        arrayObject.push({id: i, display: "none", value: array[i-1]});
+        card.push({id: i, flipped: false, value: cardValue[i-1]});
     }
+    console.log(card);
 }
-const shuffle = (array) => {
-        return array.sort(() => Math.random() - 0.5);
+const shuffle = (cardValue) => {
+        return cardValue.sort(() => Math.random() - 0.5);
       }
 
 const createBoard = () => {
-    createArray();
-    shuffle(array);
-    createArrayObject();
+    createCardValues();
+    shuffle(cardValue);
+    createCard();
 }
 
-const displayCurrentLevelStar = (currentLevel) => {
-    switch(currentLevel){
-        case 6: return level1star;
-                 
-        case 8: return level2star;
-                
-        case 10: return level3star;
-                
-        case 12: return level4star;
-                
-        case 14: return level5star;
-                
-        default: alert("Some error in setting stars");
-    }
+const setTotalStars = (stars) => {
+    totalStars = stars["1"] + stars["2"] + stars["3"] + stars["4"] + stars["5"];
 }
 
-const displayCurrentLevel = (currentLevel) => {
-    switch(currentLevel){
-        case 6: return 1;
-                 
-        case 8: return 2;
-                
-        case 10: return 3;
-                
-        case 12: return 4;
-                
-        case 14: return 5;
-                
-        default: alert("Some error in getting level");
+/* const displayChallengeButton = () => {
+    console.log("Display challenge button is called");
+    if (stars.level1 && stars.level2 && stars.level3 && stars.level4 && stars.level5){
+        document.getElementById("challenge").style.display = "block";
+        alert("Challenge button is enabled, you can challenge a friend now.")
+    } else {
+        document.getElementById("challenge").style.display = "none";
     }
-}
+} */
 createBoard();
 
 const Board = () => {
     const [moves, setMoves] = useState(0);
-    const [cardArray, setCardArray] = useState(arrayObject);
-
+    const [cardDeck, setCardDeck] = useState(card);
     const setStar = (currentLevel) => {
         if(moves <= Math.floor(0.75*currentLevel)){
             currentStar = 3;
@@ -77,20 +67,9 @@ const Board = () => {
         } else {
             currentStar = 1;
         };
-        switch(currentLevel){
-            case 6: level1star = currentStar;
-                    break; 
-            case 8: level2star = currentStar;
-                    break;
-            case 10: level3star = currentStar;
-                    break;
-            case 12: level4star = currentStar;
-                    break;
-            case 14: level5star = currentStar;
-                    break;
-            default: alert("Some error in setting stars");
-        }
-        totalStars = level1star + level2star + level3star + level4star + level5star;
+        stars[currentLevel/4] = currentStar;
+        setTotalStars(stars);
+        /* displayChallengeButton(); */
     }
     const incrementMoves = () => {
         setMoves(moves + 1);
@@ -103,82 +82,94 @@ const Board = () => {
     const handleRestartLevel = (currentLevel) => {
         alert("restarting level");
         setMoves(0);
-        setCardArray(arrayObject);
+        setCardDeck(card);
         createBoard();
         gameStart(currentLevel);
-        switch(currentLevel){
-            case 6: level1star = 0;
-                    break; 
-            case 8: level2star = 0;
-                    break;
-            case 10: level3star = 0;
-                    break;
-            case 12: level4star = 0;
-                    break;
-            case 14: level5star = 0;
-                    break;
-            default: alert("Some error in setting stars");
-        }
+        stars[currentLevel/4] = 0;
+        setTotalStars(stars);
+        console.log(stars);
+        /* displayChallengeButton(); */
     }
 
     const handleRestartGame = () => {
         alert("restarting game");
         currentStar = 0;
-        totalStars = 0;
-        level1star = 0;
-        level2star = 0;
-        level3star = 0;
-        level4star = 0;
-        level5star = 0; 
+        stars = copyOfStars;
+        setTotalStars(stars);
         setMoves(0);
-        setCardArray(arrayObject);
+        setCardDeck(card);
         createBoard();
         gameStart(currentLevel);
+        /* displayChallengeButton(); */
     }
 
     const handleLevelClicked = (level) => {
         setMoves(0);
-        setCardArray(arrayObject);
+        setCardDeck(card);
         createBoard();
         gameStart(currentLevel);
         currentLevel = level;
         createBoard();
-        setCardArray(arrayObject);
+        setCardDeck(card);
+        /* displayChallengeButton(); */
+    }
+
+    const handleOpenCard = (id) => {
+        cardDeck.forEach((item) => {
+            if(id === item.id){
+                item.flipped = true;
+            }
+            console.log(item);
+        })
+    }
+
+    const handleCloseCard = (id) => {
+        for(let item in card){
+            if(id === item.id){
+                item.flipped = false;
+            }
+            console.log(item);
+        }
     }
 
     return (
         <div className="wrapper">
             <h1>Memory Game</h1>
-            <div><h3 style={{textAlign: "center"}}>Current Level: {displayCurrentLevel(currentLevel)}</h3></div>
-            <div><h4 style={{textAlign: "center"}}>(You can only use hint once)</h4></div>
-            <div className="levels-container">
-                <ul>
-                    <li onClick={() => handleLevelClicked(6)}>Level 1</li>
-                    <li onClick={() => handleLevelClicked(8)}>Level 2</li>
-                    <li onClick={() => handleLevelClicked(10)}>Level 3</li>
-                    <li onClick={() => handleLevelClicked(12)}>Level 4</li>
-                    <li onClick={() => handleLevelClicked(14)}>Level 5</li>
-                </ul>
-            </div>
+            <div><h3 className="level-indicator">Current Level: {currentLevel/4}</h3></div>
+            <div><h4 className="hint-text">(You can only use hint once a level)</h4></div>
             <div className="all-buttons">
-                <button onClick={() => handleRestartLevel(currentLevel)}>Restart Level</button>
-                <button onClick={() => handleRestartGame()}>Restart Game</button>
-                <button onClick={() => handleGiveUp(currentLevel)}>I Give Up</button>
-                <button id="hint" onClick={() => handleHint(currentLevel)}>Hint</button>
+                <div className="btn" onClick={() => handleRestartLevel(currentLevel)}>Restart Level</div>
+                <div className="btn" onClick={() => handleRestartGame()}>Restart Game</div>
+                <div className="btn" onClick={() => handleGiveUp(currentLevel)}>I Give Up</div>
+                <div className="btn" id="hint" onClick={() => handleHint(currentLevel)}>Hint</div>
+                {/* <div className="btn" id="challenge" style={{display: "none"}}>Challenge a friend</div> */}
             </div>
-            
             <div className="score-card">
                 <p>Moves: {moves}</p>
-                <p>Stars: {displayCurrentLevelStar(currentLevel)}</p>
+                <p>Stars: {stars[currentLevel/4]}</p>
                 <p>Total Stars: {totalStars}</p>
             </div>
+            <div className="levels-container">
+                <ul>
+                    <li className="btn" onClick={() => handleLevelClicked(4)}>Level 1</li>
+                    <li className="btn" onClick={() => handleLevelClicked(8)}>Level 2</li>
+                    <li className="btn" onClick={() => handleLevelClicked(12)}>Level 3</li>
+                    <li className="btn" onClick={() => handleLevelClicked(16)}>Level 4</li>
+                    <li className="btn" onClick={() => handleLevelClicked(20)}>Level 5</li>
+                </ul>
+            </div>
+            
+            
             
             <div className="cards-container">
-                {cardArray.map((item) => {
+                {cardDeck.map((item) => {
                     return <Card 
                             key={item.id} 
-                            value={Math.ceil(item.value/2)} 
+                            value={item.value}
+                            flipped={item.flipped} 
                             id={item.id} 
+                            handleOpenCard={handleOpenCard}
+                            handleCloseCard={handleCloseCard}
                             incrementMoves={incrementMoves}
                             restartLevel={handleRestartLevel}
                             resetMoves={resetMoves}

@@ -1,12 +1,16 @@
 body{
-  margin: 10px 10px;
+  margin: 5px 5px;
   padding: 0;
   box-sizing: border-box;
-  background-color: #B2EBF2;
+  background-image: url('background-image-2.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 h1{
   text-align: center;
+  margin: 2px;
 }
 
 .card {
@@ -15,6 +19,7 @@ h1{
   color:  #448AFF;
   margin: 10px;
   border-radius: 10%;
+  box-shadow: 10px 10px 5px gray;
 }
 
 .card:hover {
@@ -41,7 +46,7 @@ h1{
   display: flex;
   flex-direction: row;
   list-style: none;
-  margin: 10px 10%;
+  margin: 10px 5%;
 }
 
 .levels-container > ul > li {
@@ -49,7 +54,7 @@ h1{
   font-size: 20px;
   text-align: center;
   background-color: #448AFF;
-  margin: 0px 5px;
+  margin: 0px 15px;
   padding: 5px;
   border-radius: 5%;
 }
@@ -74,4 +79,39 @@ h1{
   justify-content: space-around;
   margin: 10px 5%;
   width: 90%;
+}
+
+.btn {
+  transition: 0.4s;
+  border: 1px solid black;
+  padding: 8px;
+  border-radius: 8%;
+  background-color: #448AFF;
+}
+
+.btn:hover {
+  background-color: #30b9f0;
+  color: white;
+  cursor: pointer;
+}
+
+.level-indicator {
+  text-align: center;
+  margin: 1px;
+}
+
+.hint-text {
+  text-align: center;
+  margin: 1px;
+}
+
+.flipped {
+  border: 2px solid black;
+  background-color:#ffffff;
+  color:  #000000;
+  pointer-events: "none";
+  transition: background-color 0.5s ease-out;
+  margin: 10px;
+  border-radius: 10%;
+  box-shadow: 10px 10px 5px gray;
 }

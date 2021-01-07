@@ -5,8 +5,8 @@ let selectedCard2 = 0;
 let value1 = 0;
 let value2 = 0;
 let matchedPairs = 0;
-let cardWidth = "245px";
-let cardHeight = "165px";
+let cardWidth = "220px";
+let cardHeight = "250px";
 const cardBackgroundColor = "#448AFF";
 
 export const gameStart = (currentLevel) => {
@@ -52,15 +52,12 @@ export const handleHint = (currentLevel) => {
 }
 
 const cardDimension = (currentLevel) => {
-    if(currentLevel === 8 || currentLevel === 12){
-        cardWidth = "280px";
-        cardHeight = "190px";
-    } else if(currentLevel === 6) {
-        cardWidth = "330px";
-        cardHeight = "290px";
+    if(currentLevel === 14){
+        cardWidth = "165px";
+        cardHeight = "200px";
     } else {
-        cardWidth = "245px";
-        cardHeight = "165px";
+        cardWidth = "220px";
+        cardHeight = "250px";
     }
 }
 const Card = (props) => { 
@@ -71,7 +68,7 @@ const Card = (props) => {
     const gameCompleted = () => {
         if(matchedPairs === currentLevel/2){
             props.setStar(currentLevel);
-            alert("congratulations you win");
+            alert("Congratulations you have cleared this level");
             gameStart(currentLevel);
             selectedCard1 = 0;
             selectedCard2 = 0;
@@ -79,7 +76,6 @@ const Card = (props) => {
             value2 = 0;
             matchedPairs = 0;
             props.resetMoves();
-            /* props.restartLevel(); */
         }
     }
     
@@ -114,6 +110,7 @@ const Card = (props) => {
             document.getElementById(id).style.backgroundColor = "#ffffff";
             document.getElementById(id).style.color = "rgb(0, 0, 0)";
             document.getElementById(id).style.pointerEvents = "none";
+            document.getElementById(id).style.transition = "background-color 0.5s ease-out";
             if(selectedCard1 === 0){
                 selectedCard1 = props.id;
                 value1 = props.value;
