@@ -4,7 +4,6 @@ let selectedCard1 = 0;
 let selectedCard2 = 0;
 let value1 = 0;
 let value2 = 0;
-let matchedPairs = 0;
 
 const Card = (props) => { 
     let currentLevel = props.currentLevel;
@@ -12,18 +11,14 @@ const Card = (props) => {
     let flipped = props.flipped;
     let id = props.id;
     let value = props.value;
-
-    console.log("Log inside cards");
-    console.log(cardDeck);
-
-    console.log("flipped: " + flipped);
+    let matchedPairs = props.matchedPairs;
 
     const gameStart = (currentLevel) => {
         selectedCard1 = 0;
         selectedCard2 = 0;
         value1 = 0;
         value2 = 0;
-        matchedPairs = 0;
+        props.resetMatchedPairs();
         for(let i=0; i<currentLevel; i++){
             cardDeck[i].flipped = false;
         }
@@ -33,16 +28,12 @@ const Card = (props) => {
     }
 
     const gameCompleted = () => {
-        if(matchedPairs === currentLevel/2){
+        if(matchedPairs === currentLevel/2-1){
             props.setStar(currentLevel);
             alert("Congratulations you have cleared this level");
             gameStart(currentLevel);
-            selectedCard1 = 0;
-            selectedCard2 = 0;
-            value1 = 0;
-            value2 = 0;
-            matchedPairs = 0;
             props.resetMoves();
+            props.resetMatchedPairs();
             props.updateCardDeck(cardDeck);
         }
     }
@@ -53,7 +44,7 @@ const Card = (props) => {
             value1 = 0;
             selectedCard2 = 0;
             value2 = 0;
-            matchedPairs++;
+            props.incrementMatchedPairs();
             props.incrementMoves();
             props.updateCardDeck(cardDeck);
             gameCompleted();
@@ -64,8 +55,6 @@ const Card = (props) => {
                 cardDeck[selectedCard1-1].flipped = false;
                 cardDeck[selectedCard2-1].flipped = false;
                 props.updateCardDeck(cardDeck);
-                console.log("compare cards");
-                console.log(cardDeck);
                 selectedCard1 = 0;
                 value1 = 0;
                 selectedCard2 = 0;
@@ -77,8 +66,6 @@ const Card = (props) => {
         const handleCardClick = (id) => {
             cardDeck[id-1].flipped = true;
             props.updateCardDeck(cardDeck);
-            console.log("Inside handle card click");
-            console.log(cardDeck)
             if(selectedCard1 === 0){
                 selectedCard1 = id;
                 value1 = value;

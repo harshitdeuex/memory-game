@@ -28,6 +28,7 @@ const createCard = () => {
     }
 }
 const shuffle = (cardValue) => {
+        cardValue.sort(() => Math.random() - 0.5);
         return cardValue.sort(() => Math.random() - 0.5);
       }
 
@@ -55,20 +56,26 @@ createBoard();
 const Board = () => {
     const [moves, setMoves] = useState(0);
     const [cardDeck, setCardDeck] = useState(card);
-    console.log("Inside board cardDeck");
-    console.log(cardDeck);
-    console.log("Inside board card")
-    console.log(card);
+    const [matchedPairs, setMatchedPairs] = useState(0);
+    const [hintDisabled, setHintDisabled] = useState(false);
+    const [totalStarsState, setTotalStarsState] = useState(totalStars);
+    const [currentStarState, setCurrentStarState] = useState(stars[currentLevel/4]);
+
+    console.log("Board");
     const setStar = (currentLevel) => {
-        if(moves <= Math.floor(0.75*currentLevel)){
+        if(moves > 0 && moves <= Math.floor(0.75*currentLevel)){
             currentStar = 3;
-        } else if(moves > Math.floor(0.75*currentLevel) && moves <= currentLevel){
+        } else if(moves > 0 && moves > Math.floor(0.75*currentLevel) && moves <= currentLevel){
             currentStar = 2;
-        } else {
+        } else if(moves > currentLevel) {
             currentStar = 1;
+        } else {
+            currentStar = 0;
         };
         stars[currentLevel/4] = currentStar;
+        setCurrentStarState(stars[currentLevel/4]);
         setTotalStars(stars);
+        setTotalStarsState(totalStars);
         /* displayChallengeButton(); */
     }
 
@@ -81,10 +88,17 @@ const Board = () => {
         setMoves(0);
     }
 
+    const resetMatchedPairs = () => {
+        setMatchedPairs(0);
+    }
+
+    const incrementMatchedPairs = () => {
+        setMatchedPairs(matchedPairs + 1);
+    }
+
     const updateCardDeck = (card) => {
         setCardDeck(card);
         console.log("card deck updated")
-        console.log(cardDeck);
     }
 
     const handleRestartLevel = (currentLevel) => {
@@ -93,47 +107,57 @@ const Board = () => {
         createBoard();
         setCardDeck(card);
         stars[currentLevel/4] = 0;
+        setCurrentStarState(stars[currentLevel/4]);
         setTotalStars(stars);
-        console.log(stars);
+        setTotalStarsState(totalStars);
+        setHintDisabled(false);
+        setMatchedPairs(0);
         /* displayChallengeButton(); */
     }
 
     const handleRestartGame = () => {
+        console.log("Restart Game Clicked");
         alert("restarting game");
-        currentStar = 0;
-        stars = copyOfStars;
         setMoves(0);
         createBoard();
         setCardDeck(card);
+        currentStar = 0;
+        setCurrentStarState(0);
+        stars = copyOfStars;
         setTotalStars(copyOfStars);
+        setTotalStarsState(0);
+        console.log("after setting total stars")
+        console.log();
+        setHintDisabled(false);
+        setMatchedPairs(0);
+        console.log(stars);
         /* displayChallengeButton(); */
     }
 
     const handleLevelClicked = (level) => {
         setMoves(0);
         currentLevel = level;
+        setCurrentStarState(stars[currentLevel/4]);
         createBoard();
         setCardDeck(card);
+        setHintDisabled(false);
+        setMatchedPairs(0);
         /* displayChallengeButton(); */
     }
 
     const handleHint = (currentLevel) => {
         let randomNumber = Math.ceil(Math.random()*currentLevel-1);
-        console.log("random number: " + randomNumber);
-        /* let color = document.getElementById(randomNumber).style.backgroundColor;
-        console.log("color: " + color) */
         if(!cardDeck[randomNumber].flipped){
-            /* document.getElementById(randomNumber).style.backgroundColor = "#ffffff";
-            document.getElementById(randomNumber).style.color = "rgb(0, 0, 0)" */
-            cardDeck[randomNumber].flipped = true;
-            updateCardDeck(cardDeck);
+            const newDeck = [...cardDeck];
+            newDeck[randomNumber].flipped = true;
+            updateCardDeck(newDeck);
             setTimeout(() => {
-                /* document.getElementById(randomNumber).style.backgroundColor = cardBackgroundColor;
-                document.getElementById(randomNumber).style.color = cardBackgroundColor; */
-                cardDeck[randomNumber].flipped = false;
-                updateCardDeck(cardDeck);
-            }, 500);
-            document.getElementById("hint").style.pointerEvents = "none";
+                 const newDeck = [...cardDeck]
+;                newDeck[randomNumber].flipped = false;
+                updateCardDeck(newDeck);
+            }, 500); 
+
+            setHintDisabled(true);
         }
         else {
             handleHint(currentLevel);
@@ -141,55 +165,59 @@ const Board = () => {
     }
 
     const handleGiveUp = (currentLevel) => {
-        console.log("Inside give up button");
+        const newDeck = [...cardDeck]
         for(let i=0; i<currentLevel; i++){
-            /* document.getElementById(i).style.backgroundColor = "#ffffff";
-            document.getElementById(i).style.color = "rgb(0, 0, 0)";
-            document.getElementById(i).style.pointerEvents = "none"; */
-            cardDeck[i].flipped = true;
+            newDeck[i].flipped = true;
         }
-        updateCardDeck(cardDeck);
+        updateCardDeck(newDeck);
+        setHintDisabled(true);
     }
 
-
-    return (
-        <div className="wrapper">
-            <Header currentLevel={currentLevel/4}/>
-            <Buttons
-                currentLevel={currentLevel} 
-                handleRestartLevel={handleRestartLevel}
-                handleRestartGame={handleRestartGame}
-                handleGiveUp={handleGiveUp}
-                handleHint={handleHint}
-            />
-            <ScoreCard 
-                moves={moves}
-                currentLevelStars={stars[currentLevel/4]}
-                totalStars={totalStars}
-            />
-            <Levels 
-                handleLevelClicked={handleLevelClicked}
-            />
-                        
-            <div className="cards-container">
-                {cardDeck.map((item) => {
-                    return <Card 
-                            key={item.id} 
-                            value={item.value}
-                            flipped={item.flipped} 
-                            id={item.id}
-                            cardDeck={cardDeck}
-                            updateCardDeck={updateCardDeck} 
-                            incrementMoves={incrementMoves}
-                            restartLevel={handleRestartLevel}
-                            resetMoves={resetMoves}
-                            currentLevel={currentLevel}
-                            setStar={setStar}
-                            />
-                })}
-                </div>
-        </div>
-    )
+        return (
+            <div className="wrapper">
+                <Header currentLevel={currentLevel/4}/>
+                <Buttons
+                    currentLevel={currentLevel} 
+                    handleRestartLevel={handleRestartLevel}
+                    handleRestartGame={handleRestartGame}
+                    handleGiveUp={handleGiveUp}
+                    handleHint={handleHint}
+                    hintDisabled={hintDisabled}
+                    
+                />
+                
+                <ScoreCard 
+                    moves={moves}
+                    currentLevelStars={currentStarState}
+                    totalStars={totalStarsState}
+                />
+                <Levels 
+                    handleLevelClicked={handleLevelClicked}
+                />
+                            
+                <div className="cards-container">
+                    {cardDeck.map((item) => {
+                        return <Card 
+                                key={item.id} 
+                                value={item.value}
+                                flipped={item.flipped} 
+                                id={item.id}
+                                cardDeck={cardDeck}
+                                updateCardDeck={updateCardDeck} 
+                                incrementMoves={incrementMoves}
+                                restartLevel={handleRestartLevel}
+                                matchedPairs={matchedPairs}
+                                resetMatchedPairs={resetMatchedPairs}
+                                incrementMatchedPairs={incrementMatchedPairs}
+                                resetMoves={resetMoves}
+                                currentLevel={currentLevel}
+                                setStar={setStar}
+                                />
+                    })}
+                    </div>
+            </div>
+        )
+    
 }
 
 export default Board;
