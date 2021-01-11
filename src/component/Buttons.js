@@ -7,7 +7,6 @@ const Buttons = (props) => {
                     <div className="btn" onClick={() => props.handleRestartGame()}>Restart Game</div>
                     <div className="btn" onClick={() => props.handleGiveUp(currentLevel)}>I Give Up</div>
                     <div className="btn" id="hint" disabled={props.hintDisabled} onClick={() => props.handleHint(currentLevel)}>Hint</div>
-                {/* <div className="btn" id="challenge" style={{display: "none"}}>Challenge a friend</div> */}
                 </div>
     )
 }

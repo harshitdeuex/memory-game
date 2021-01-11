@@ -1,14 +1,23 @@
 import React from 'react';
 
 const Levels = (props) => {
+    const {totalLevels, handleLevelClicked} = props;
+    let totalLevelsArray = [];
+
+    for(let i=1; i<= totalLevels; i++){
+        totalLevelsArray.push(i);
+    }
     return (
         <div className="levels-container">
                 <ul>
-                    <li className="btn" onClick={() => props.handleLevelClicked(4)}>Level 1</li>
-                    <li className="btn" onClick={() => props.handleLevelClicked(8)}>Level 2</li>
-                    <li className="btn" onClick={() => props.handleLevelClicked(12)}>Level 3</li>
-                    <li className="btn" onClick={() => props.handleLevelClicked(16)}>Level 4</li>
-                    <li className="btn" onClick={() => props.handleLevelClicked(20)}>Level 5</li>
+                    {totalLevelsArray.map((level) => {
+                        return <li 
+                                key={level}
+                                className="btn" 
+                                onClick={() => handleLevelClicked(level*4)}>
+                                Level {level}
+                                </li>    
+                    })}
                 </ul>
             </div>
     )
