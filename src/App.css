@@ -1,38 +1,128 @@
-.App {
-  text-align: center;
+body{
+  margin: 5px 5px;
+  padding: 0;
+  box-sizing: border-box;
+  background-image: url('background-image-2.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
-.App-logo {
-  height: 40vmin;
+h1{
+  text-align: center;
+  margin: 2px;
+}
+
+.card {
+  border: 2px solid black;
+  background-color:#448AFF;
+  color:  #448AFF;
+  margin: 10px;
+  border-radius: 10%;
+  height: 185px;
+  width: 140px;
+  box-shadow: 10px 10px 5px gray;
+  pointer-events: all;
+}
+
+.card:hover {
+  cursor: pointer;
+}
+
+.card-number{
+  font-size: 50px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  padding: auto;
+}
+
+.cards-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.levels-container > ul {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  margin: 10px 5%;
+}
+
+.levels-container > ul > li {
+  width: 20%;
+  font-size: 20px;
+  text-align: center;
+  background-color: #448AFF;
+  margin: 0px 15px;
+  padding: 5px;
+  border-radius: 5%;
+}
+
+.levels-container > ul > li:hover{
+  cursor: pointer;
+  background-color: #0097A7;
+}
+
+.score-card{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 10px 5%;
+  width: 90%;
+  background-color: #448AFF;
+}
+
+.all-buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 10px 5%;
+  width: 90%;
+}
+
+.btn {
+  transition: 0.4s;
+  border: 1px solid black;
+  padding: 8px;
+  border-radius: 8%;
+  background-color: #448AFF;
+}
+
+.btn:hover {
+  background-color: #30b9f0;
+  color: white;
+  cursor: pointer;
+}
+
+.level-indicator {
+  text-align: center;
+  margin: 1px;
+}
+
+.hint-text {
+  text-align: center;
+  margin: 1px;
+}
+
+.flipped {
+  border: 2px solid black;
+  background-color:#ffffff;
+  color:  #000000;
+  pointer-events: "none";
+  transition: background-color 0.5s ease-out;
+  margin: 10px;
+  height: 185px;
+  width: 140px;
+  border-radius: 10%;
+  box-shadow: 10px 10px 5px gray;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+div[disabled] {
+  pointer-events: none;
+  background-color: gray;
 }
