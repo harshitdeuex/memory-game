@@ -11,9 +11,14 @@ let card = [];
 let totalLevels = 6;
 let currentLevel = 4;
 let currentStar = 0;
-let stars = {"1": 0, "2": 0,"3": 0,"4": 0,"5": 0, "6": 0}
-let copyOfStars = {"1": 0, "2": 0,"3": 0,"4": 0,"5": 0,"6": 0};
+let stars = {};
+let copyOfStars = {};
 let totalStars = 0;
+
+for(let i=1; i<= totalLevels; i++){
+    stars[i] = 0;
+    copyOfStars[i] = 0;
+}
 
 const createCardValues = () => {
     cardValue = [];
@@ -145,7 +150,7 @@ const Board = () => {
                  const newDeck = [...cardDeck]
 ;                newDeck[randomNumber].flipped = false;
                 updateCardDeck(newDeck);
-            }, 500); 
+            }, 750); 
 
             setHintDisabled(true);
         }
